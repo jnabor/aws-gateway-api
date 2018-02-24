@@ -63,7 +63,7 @@
 var app = new Vue({
     el: '#app',
     data: {
-        apiUrl: 'https://aqvldbnnwe.execute-api.ap-southeast-1.amazonaws.com/devapi',
+        apiUrl: '', // add your api endpoint here
         response: '',
         showSuccess: false,
         showError: false,
@@ -87,7 +87,7 @@ var app = new Vue({
             console.log('sending post request to ' + this.apiUrl)
             var xhr = new XMLHttpRequest()
             xhr.open('POST', this.apiUrl)
-            xhr.onreadystatechange = function (event) {
+            xhr.onreadystatechange = (event) => {
                 console.log(event.target.response)
             }
             xhr.send()
