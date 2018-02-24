@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>AWS API Gateway Test</title>
+    <meta name="description" content="AWS API Gateway Test">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+</head>
+<body style="padding:40px;">
+<div id="app">
+<h3>API Test</h3>
+<h6><span class="badge badge-secondary">{{ apiUrl }}</span></h6>
+<button type="button" v-on:click="onPost" class="btn btn-outline-primary">POST</button>
+<h6><span class="badge badge-secondary">Response</span></h6>
+<div v-if="showSuccess" class="alert alert-success" role="alert">
+    {{ reponse }}
+</div>
+<div v-if="showError" class="alert alert-danger" role="alert">
+    {{ reponse }}
+</div>
+
+</div>
+
+<script>
+var app = new Vue({
+    el: '#app',
+    data: {
+        apiUrl: 'https://3l6pmdtk49.execute-api.ap-southeast-1.amazonaws.com/dev/compare-yourself',
+        response: '',
+        showSuccess: false,
+        showError: false
+    },
+    methods: {
+        onPost: function () {
+            console.log('sending post request to ' + this.apiUrl)
+            var xhr = new XMLHttpRequest()
+            xhr.open('POST', this.apiUrl)
+            xhr.onreadystatechange = function (event) {
+                console.log(event.target.response)
+            }
+            xhr.send()
+        }
+    }
+})
+</script>
+</body>
+</html>
