@@ -11,13 +11,16 @@
 <div id="app">
 <h3>API Test</h3>
 <h6><span class="badge badge-secondary">{{ apiUrl }}</span></h6>
-<button type="button" v-on:click="onPost" class="btn btn-outline-primary">POST</button>
+<button type="button" @click="onPost()" class="btn btn-outline-primary">POST</button>
+<button type="button" @click="onDelete()" class="btn btn-outline-primary">DELETE</button>
+<button type="button" @click="onGet('all')" class="btn btn-outline-primary">GET ALL</button>
+<button type="button" @click="onGet('single')" class="btn btn-outline-primary">GET SINGLE</button>
 <h6><span class="badge badge-secondary">Response</span></h6>
 <div v-if="showSuccess" class="alert alert-success" role="alert">
-    {{ reponse }}
+    {{ message }}
 </div>
 <div v-if="showError" class="alert alert-danger" role="alert">
-    {{ reponse }}
+    {{ message }}
 </div>
 
 </div>
@@ -26,19 +29,52 @@
 var app = new Vue({
     el: '#app',
     data: {
-        apiUrl: '', // add your api endpoint here
-        response: '',
+        apiUrl: 'https://ddcp2vwpo3.execute-api.ap-southeast-1.amazonaws.com/devapi/compare-yourself', // add your api endpoint here
+        message: '',
         showSuccess: false,
         showError: false
     },
     methods: {
         onPost: function () {
+            this.showSuccess = false
+            this.showError = false
             console.log('sending post request to ' + this.apiUrl)
             var xhr = new XMLHttpRequest()
             xhr.open('POST', this.apiUrl)
-            xhr.onreadystatechange = function (event) {
+            xhr.onreadystatechange =  (event) => {
                 console.log(event.target.response)
+                this.message = event.target.response
+                this.showSuccess = true
             }
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(JSON.stringify({ "age": 32, "height": 163, "income": 6280 }))
+        },
+        onDelete: function () {
+            this.showSuccess = false
+            this.showError = false
+            console.log('sending post request to ' + this.apiUrl)
+            var xhr = new XMLHttpRequest()
+            xhr.open('DELETE', this.apiUrl)
+            xhr.onreadystatechange =  (event) => {
+                console.log(event.target.response)
+                this.message = event.target.response
+                this.showSuccess = true
+            }
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send()
+        },
+        onGet: function (param) {
+            this.showSuccess = false
+            this.showError = false
+            console.log('sending post request to ' + this.apiUrl + '/' + param)
+            var xhr = new XMLHttpRequest()
+            xhr.open('GET', this.apiUrl + '/' + param)
+            xhr.onreadystatechange =  (event) => {
+                console.log('Response: ' + event.target.response)
+                this.message = event.target.response
+                this.showSuccess = true
+            }
+            xhr.setRequestHeader('Content-Type', 'application/json')
             xhr.send()
         }
     }
