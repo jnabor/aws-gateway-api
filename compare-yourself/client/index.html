@@ -10,6 +10,9 @@
 <body style="padding:40px;">
 <div id="app">
 <h3>API Test</h3>
+<input v-model="record.age" placeholder="age">
+<input v-model="record.height" placeholder="height">
+<input v-model="record.income" placeholder="income">
 <h6><span class="badge badge-secondary">{{ apiUrl }}</span></h6>
 <button type="button" @click="onPost()" class="btn btn-outline-primary">POST</button>
 <button type="button" @click="onDelete()" class="btn btn-outline-primary">DELETE</button>
@@ -31,6 +34,11 @@ var app = new Vue({
     data: {
         apiUrl: 'https://ddcp2vwpo3.execute-api.ap-southeast-1.amazonaws.com/devapi/compare-yourself', // add your api endpoint here
         message: '',
+        record: {
+            age: '',
+            height: '',
+            income: ''
+        },
         showSuccess: false,
         showError: false
     },
@@ -47,7 +55,11 @@ var app = new Vue({
                 this.showSuccess = true
             }
             xhr.setRequestHeader('Content-Type', 'application/json')
-            xhr.send(JSON.stringify({ "age": 32, "height": 163, "income": 6280 }))
+            xhr.send(JSON.stringify({ 
+                "age": parseInt(this.record.age), 
+                "height": parseInt(this.record.height), 
+                "income": parseInt(this.record.income) 
+            }))
         },
         onDelete: function () {
             this.showSuccess = false
