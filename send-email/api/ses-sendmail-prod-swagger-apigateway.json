@@ -1,0 +1,180 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2018-03-15T15:07:20Z",
+    "title": "ses-sendmail"
+  },
+  "host": "",
+  "basePath": "/prod",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/ses-sendmail": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SendEmail",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SendEmail"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-request-validator": "Validate body",
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "#set($inputRoot = $input.path('$'))\n{\n  \"to\" : \"$inputRoot.to\",\n  \"body\" : \"$inputRoot.body\",\n  \"subject\" : \"$inputRoot.subject\",\n  \"from\" : \"$inputRoot.from\"\n}"
+          },
+          "uri": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:815621908682:function:ses-sendmail/invocations",
+          "passthroughBehavior": "when_no_templates",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "options": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
+        }
+      },
+      "x-amazon-apigateway-any-method": {
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            ".*": {
+              "statusCode": "200"
+            }
+          },
+          "uri": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:815621908682:function:ses-sendmail:prod/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Empty": {
+      "type": "object",
+      "required": [
+        "body",
+        "subject",
+        "to"
+      ],
+      "properties": {
+        "to": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        }
+      },
+      "title": "SendEmail"
+    },
+    "SendEmail": {
+      "type": "object",
+      "required": [
+        "body",
+        "from",
+        "subject",
+        "to"
+      ],
+      "properties": {
+        "to": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        }
+      },
+      "title": "SendEmail"
+    }
+  },
+  "x-amazon-apigateway-request-validators": {
+    "Validate body": {
+      "validateRequestParameters": false,
+      "validateRequestBody": true
+    }
+  }
+}

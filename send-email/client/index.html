@@ -20,12 +20,12 @@
                     <h3 class="title mb-4">EMAIL API TEST</h3>
                     <v-form v-model="valid">
                         <v-text-field
-                            label="Name"
+                            label="Your Name"
                             v-model="name"
                             :rules="nameRules"
                              required></v-text-field>
                         <v-text-field
-                            label="E-mail"
+                            label="Your E-mail Address"
                             v-model="email"
                             :rules="emailRules"
                             required></v-text-field>
@@ -63,23 +63,24 @@
 var app = new Vue({
     el: '#app',
     data: {
-        apiUrl: 'https://aqvldbnnwe.execute-api.ap-southeast-1.amazonaws.com/devapi/send-email', // add your api endpoint here
+        apiUrl: '', 
         response: '',
         showSuccess: false,
         showError: false,
         valid: false,
-        name: 'Jayson Nabor',
+        name: '',
         nameRules: [
-            v => !!v || 'Name is required'
+            (v) => !!v || 'Name is required'
         ],
-        email: 'sonabstudios@gmail.com',
+        email: '',
         emailRules: [
-            v => !!v || 'E-mail is required',
-            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+            (v) => !!v || 'E-mail is required',
+            (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
         ],
         message: 'Test',
         messageRules: [
-            v => !!v || 'Message is required'
+            (v) => !!v || 'Message is required',
+            (v) => v.length >= 15 || 'At least 15 characters'
         ]
     },
     methods: {
@@ -90,7 +91,13 @@ var app = new Vue({
             xhr.onreadystatechange = (event) => {
                 console.log(event.target.response)
             }
-            xhr.send()
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(JSON.stringify({ 
+                "to": "", 
+                "body": this.message, 
+                "subject": "Test Email API",
+                "from": this.email
+            }))
         }
     }
 })
